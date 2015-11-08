@@ -41,7 +41,7 @@ namespace TShockAPI.ServerSideCharacters
 		public int StartingHealth = 100;
 
 		[Description("The starting default mana for new SSC.")] 
-		public int StartingMana = 20;
+		public int StartingMana = 0;
 
 		[Description("The starting default inventory for new SSC.")] 
 		public List<NetItem> StartingInventory = new List<NetItem>();

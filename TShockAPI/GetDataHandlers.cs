@@ -1344,7 +1344,7 @@ namespace TShockAPI
 
 			if (args.Player.GodMode && (cur < max))
 			{
-				args.Player.Heal(args.TPlayer.statLifeMax2);
+				args.Player.Heal(args.TPlayer.statLifeMax3);
 			}
 			return false;
 		}
@@ -3384,7 +3384,7 @@ namespace TShockAPI
 
 			if (TShock.Players[id].GodMode)
 			{
-				TShock.Players[id].Heal(args.TPlayer.statLifeMax);
+				TShock.Players[id].Heal(args.TPlayer.statLifeMax3);
 			}
 
 			return false;

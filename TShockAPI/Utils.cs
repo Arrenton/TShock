@@ -45,7 +45,7 @@ namespace TShockAPI
 		/// <summary>
 		/// The highest id for a prefix.
 		/// </summary>
-		private const int LastItemPrefix = 83;
+		private const int LastItemPrefix = 130;
 
 		/// <summary>instance - an instance of the utils class</summary>
 		private static readonly Utils instance = new Utils();
