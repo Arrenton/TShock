@@ -456,9 +456,13 @@ namespace TShockAPI
 			#region World Commands
 			add(new Command(Permissions.toggleexpert, ToggleExpert, "expert", "expertmode")
 			{
-					HelpText = "Toggles expert mode."
+			    HelpText = "Toggles expert mode, and disables critical mode."
 			});
-			add(new Command(Permissions.antibuild, ToggleAntiBuild, "antibuild")
+            add(new Command(Permissions.toggleexpert, ToggleCritical, "critical", "criticalmode")
+            {
+                HelpText = "Toggles critical mode."
+            });
+            add(new Command(Permissions.antibuild, ToggleAntiBuild, "antibuild")
 			{
 				HelpText = "Toggles build protection."
 			});
@@ -1993,11 +1997,20 @@ namespace TShockAPI
 		private static void ToggleExpert(CommandArgs args)
 		{
 			Main.expertMode = !Main.expertMode;
-			TSPlayer.All.SendData(PacketTypes.WorldInfo);
-			args.Player.SendSuccessMessage("Expert mode is now {0}.", Main.expertMode ? "on" : "off");
+            Main.CriticalMode = false;
+            TSPlayer.All.SendData(PacketTypes.WorldInfo);
+			args.Player.SendSuccessMessage("Expert mode is now {0}. Critical mode is off.", Main.expertMode ? "on" : "off");
 		}
 
-		private static void Hardmode(CommandArgs args)
+        private static void ToggleCritical(CommandArgs args)
+        {
+            Main.expertMode = !Main.CriticalMode;
+            Main.CriticalMode = !Main.CriticalMode;
+            TSPlayer.All.SendData(PacketTypes.WorldInfo);
+            args.Player.SendSuccessMessage("Critical mode is now {0}.", Main.CriticalMode ? "on" : "off");
+        }
+
+        private static void Hardmode(CommandArgs args)
 		{
 			if (Main.hardMode)
 			{
