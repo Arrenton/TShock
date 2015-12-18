@@ -462,6 +462,10 @@ namespace TShockAPI
             {
                 HelpText = "Toggles critical mode."
             });
+            add(new Command(Permissions.awardexp, AwardXP, "awardexp", "xp")
+            {
+                HelpText = "Gives a player EXP."
+            });
             add(new Command(Permissions.antibuild, ToggleAntiBuild, "antibuild")
 			{
 				HelpText = "Toggles build protection."
@@ -2009,7 +2013,56 @@ namespace TShockAPI
             TSPlayer.All.SendData(PacketTypes.WorldInfo);
             args.Player.SendSuccessMessage("Critical mode is now {0}.", Main.CriticalMode ? "on" : "off");
         }
-
+        private static void AwardXP(CommandArgs args)
+        {
+            if (args.Parameters.Count < 2)
+            {
+                args.Player.SendErrorMessage(
+                    "Invalid syntax! Proper syntax: {0}awardexp <player> <exp amount>", Specifier);
+                return;
+            }
+            if (args.Parameters[0].Length == 0)
+            {
+                args.Player.SendErrorMessage("Missing player name.");
+                return;
+            }
+            if (args.Parameters[1].Length == 0)
+            {
+                args.Player.SendErrorMessage("Missing EXP Value.");
+                return;
+            }
+            string plStr = args.Parameters[0];
+            args.Parameters.RemoveAt(0);
+            int EXP = 0;
+            int.TryParse(args.Parameters[0], out EXP);
+            if (EXP > 0 && EXP <= 9999999)
+            {
+                var players = TShock.Utils.FindPlayer(plStr);
+                if (players.Count == 0)
+                {
+                    args.Player.SendErrorMessage("Invalid player!");
+                }
+                else if (players.Count > 1)
+                {
+                    TShock.Utils.SendMultipleMatchError(args.Player, players.Select(p => p.Name));
+                }
+                else
+                {
+                    var plr = players[0];
+                    plr.SendEXP(EXP);
+                    args.Player.SendSuccessMessage(string.Format("Sent {0} Experience to {1}.", EXP, plr.Name));
+                    plr.SendSuccessMessage(string.Format("{0} sent you {1} Experience.", args.Player.Name, EXP));
+                }
+            }
+            else if (EXP == 0)
+            {
+                args.Player.SendErrorMessage("EXP to send must be higher than 0.");
+            }
+            else if (EXP > 9999999)
+            {
+                args.Player.SendErrorMessage("EXP to send must not be higher than the maximum of 9999999.");
+            }
+        }
         private static void Hardmode(CommandArgs args)
 		{
 			if (Main.hardMode)

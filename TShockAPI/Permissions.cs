@@ -260,7 +260,10 @@ namespace TShockAPI
 		[Description("User can change expert state.")]
 		public static readonly string toggleexpert = "tshock.world.toggleexpert";
 
-		[Description("Allows you to edit the spawn.")]
+        [Description("User can change expert state.")]
+        public static readonly string awardexp = "tshock.awardexp";
+
+        [Description("Allows you to edit the spawn.")]
 		public static readonly string editspawn = "tshock.world.editspawn";
 
 		[Description("Allows you to edit regions.")]
