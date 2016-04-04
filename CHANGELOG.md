@@ -2,6 +2,14 @@
 
 This is the rolling changelog for TShock for Terraria. Use past tense when adding new entries; sign your name off when you add or change something. This should primarily be things like user changes, not necessarily codebase changes unless it's really relevant or large.
 
+## Upcoming Changes
+
+* Fixed character styles/gender not being saved properly on first login while SSC is on (@WhiteXZ)
+* Added a PlayerPermission hook fired whenever a permission check involving said player occurs (when the new TSPlayer.HasPermission method is called) (@Enerdy)
+* Resolved an issue where martian invasions and eclipses would have empty messages if AnonymousBossInvasions was set to true (@WhiteXZ)
+* Added an optional `slime` parameter to the `rain` command, allowing slime rain to be started and stopped. New syntax is `rain [slime] <start/stop>` (@WhiteXZ)
+* Fixed a bug in RegionManager preventing regions adding correctly (@pink_panther)
+
 ## TShock 4.3.12
 
 * Fixed issues with TSPlayer.SetTeam not working (@WhiteXZ)

@@ -22,9 +22,12 @@ using System.Collections.Generic;
 
 namespace TShockAPI
 {
+    /// <summary>
+	/// A class used to group multiple users' permissions and settings.
+    /// </summary>
 	public class Group
-	{
-		// NOTE: Using a const still suffers from needing to recompile to change the default
+    {
+	    // NOTE: Using a const still suffers from needing to recompile to change the default
 		// ideally we would use a static but this means it can't be used for the default parameter :(
         /// <summary>
         /// Default chat color.
@@ -146,27 +149,46 @@ namespace TShockAPI
 				}
 				return all.ToList();
 			}
-		}
+        }
 
+        /// <summary>
+		/// The group's chat color red byte.
+		/// </summary>
 		public byte R = 255;
+		/// <summary>
+		/// The group's chat color green byte.
+		/// </summary>
 		public byte G = 255;
+		/// <summary>
+		/// The group's chat color blue byte.
+		/// </summary>
 		public byte B = 255;
 
-	    public static Group DefaultGroup = null;
+	    /// <summary>
+		/// The default group attributed to unregistered users.
+		/// </summary>
+		public static Group DefaultGroup = null;
 
-		public Group(string groupname, Group parentgroup = null, string chatcolor = "255,255,255", string permissions = null)
+        /// <summary>
+		/// Initializes a new instance of the group class.
+		/// </summary>
+		/// <param name="groupname">The name of the group.</param>
+		/// <param name="parentgroup">The parent group, if any.</param>
+		/// <param name="chatcolor">The chat color, in "RRR,GGG,BBB" format.</param>
+		/// <param name="permissions">The list of permissions associated with this group, separated by commas.</param>
+        public Group(string groupname, Group parentgroup = null, string chatcolor = "255,255,255", string permissions = null)
 		{
 			Name = groupname;
 			Parent = parentgroup;
 			ChatColor = chatcolor;
 			Permissions = permissions;
-		}
+        }
 
-        /// <summary>
-        /// Checks to see if a group has a specified permission.
-        /// </summary>
-        /// <param name="permission">The permission to check.</param>
-        /// <returns>Returns true if the user has that permission.</returns>
+		/// <summary>
+		/// Checks to see if a group has a specified permission.
+		/// </summary>
+		/// <param name="permission">The permission to check.</param>
+		/// <returns>True if the group has that permission.</returns>
 		public virtual bool HasPermission(string permission)
         {
 	        bool negated = false;
@@ -247,13 +269,13 @@ namespace TShockAPI
 				permissions.Add(permission);
 				negatedpermissions.Remove(permission); // Ensure we don't have conflicting definitions for a permissions
 			}
-		}
+        }
 
-        /// <summary>
-        /// Clears the permission list and sets it to the list provided, 
-        /// will parse "!permssion" and add it to the negated permissions.
-        /// </summary>
-        /// <param name="permission"></param>
+		/// <summary>
+		/// Clears the permission list and sets it to the list provided, 
+		/// will parse "!permssion" and add it to the negated permissions.
+		/// </summary>
+		/// <param name="permission">The new list of permissions to associate with the group.</param>
 		public void SetPermission(List<string> permission)
 		{
 			permissions.Clear();
@@ -292,7 +314,8 @@ namespace TShockAPI
 			otherGroup.Permissions = Permissions;
 		}
 
-		public override string ToString() {
+		public override string ToString()
+        {
 			return this.Name;
 		}
 	}
@@ -301,17 +324,25 @@ namespace TShockAPI
     /// This class is the SuperAdminGroup, which has access to everything.
     /// </summary>
 	public class SuperAdminGroup : Group
-	{
+    {
+        /// <summary>
+		/// The superadmin class has every permission, represented by '*'.
+		/// </summary>
 		public override List<string> TotalPermissions
 		{
 			get { return new List<string> { "*" }; }
-		}
+        }
+
+		/// <summary>
+		/// Initializes a new instance of the SuperAdminGroup class with the configured parameters.
+		/// Those can be changed in the config file.
+		/// </summary>
 		public SuperAdminGroup()
 			: base("superadmin")
 		{
-			R = (byte) TShock.Config.SuperAdminChatRGB[0];
-			G = (byte) TShock.Config.SuperAdminChatRGB[1];
-			B = (byte) TShock.Config.SuperAdminChatRGB[2];
+			R = (byte)TShock.Config.SuperAdminChatRGB[0];
+			G = (byte)TShock.Config.SuperAdminChatRGB[1];
+			B = (byte)TShock.Config.SuperAdminChatRGB[2];
 			Prefix = TShock.Config.SuperAdminChatPrefix;
 			Suffix = TShock.Config.SuperAdminChatSuffix;
 		}
