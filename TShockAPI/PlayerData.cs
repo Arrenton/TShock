@@ -8,8 +8,26 @@ namespace TShockAPI
         public NetItem[] inventory = new NetItem[NetItem.MaxInventory];
         public int health = TShock.ServerSideCharacterConfig.StartingHealth;
         public int maxHealth = TShock.ServerSideCharacterConfig.StartingHealth;
+        public int Level = TShock.ServerSideCharacterConfig.StartingLevel;
         public int mana = TShock.ServerSideCharacterConfig.StartingMana;
         public int maxMana = TShock.ServerSideCharacterConfig.StartingMana;
+        public int Exp = 0;
+        public int StatPoints = 0;
+        public int bonusStr = 0;
+        public int bonusRng = 0;
+        public int bonusMag = 0;
+        public int bonusDef = 0;
+        public int[] Ability = new int[Main.AbilityCount];
+        public int[] LearnedAbilities = new int[Main.AbilityCount];
+        public int? baseHP;
+        public int? baseStr;
+        public int? baseRng;
+        public int? baseMag;
+        public int? baseDef;
+        public int? Regenerate;
+        public int? MRegenerate;
+        public int? Spec = 0;
+        public int? EXPRate = 0;
         public bool exists;
         public int spawnX = -1;
         public int spawnY = -1;
@@ -26,6 +44,8 @@ namespace TShockAPI
         public Color? eyeColor;
         public bool[] hideVisuals;
         public int questsCompleted;
+        public int[] ActiveAbilties = new int[Main.AbilityCount];
+        public int[] LrndAbilties = new int[Main.AbilityCount];
 
         public PlayerData(TSPlayer player)
         {
@@ -91,6 +111,26 @@ namespace TShockAPI
             this.skinColor = player.TPlayer.skinColor;
             this.eyeColor = player.TPlayer.eyeColor;
             this.questsCompleted = player.TPlayer.anglerQuestsFinished;
+            this.Level = player.TPlayer.Level;
+            this.Exp = player.TPlayer.Exp;
+            this.StatPoints = player.TPlayer.StatPoints;
+            this.bonusStr = player.TPlayer.bonusStr;
+            this.bonusRng = player.TPlayer.bonusRng;
+            this.bonusMag = player.TPlayer.bonusMag;
+            this.bonusDef = player.TPlayer.bonusDef;
+            this.baseHP = player.TPlayer.baseHP;
+            this.baseStr = player.TPlayer.baseStr;
+            this.baseRng = player.TPlayer.baseRng;
+            this.baseMag = player.TPlayer.baseMag;
+            this.baseDef = player.TPlayer.baseDef;
+            this.Regenerate = player.TPlayer.Regenerate ? (TShock.ServerSideCharacterConfig.EnableRegeneration ? 1 : 0) : 0;
+            this.MRegenerate = player.TPlayer.MRegenerate ? (TShock.ServerSideCharacterConfig.EnableManaRegen ? 1 : 0) : 0;
+            
+            this.Spec = player.TPlayer.Spec;
+            this.EXPRate = player.TPlayer.EXPRate;
+            this.LearnedAbilities = player.TPlayer.LearnedAbilities.ToArray();
+            this.Ability = player.TPlayer.Ability.ToArray();
+
 
             Item[] inventory = player.TPlayer.inventory;
             Item[] armor = player.TPlayer.armor;
@@ -171,6 +211,41 @@ namespace TShockAPI
             // Start ignoring SSC-related packets! This is critical so that we don't send or receive dirty data!
             player.IgnoreSSCPackets = true;
 
+            player.TPlayer.Level = (byte)this.Level;
+            player.TPlayer.Exp = this.Exp;
+            player.TPlayer.StatPoints = (short)this.StatPoints;
+            player.TPlayer.bonusStr = (short)this.bonusStr;
+            player.TPlayer.bonusRng = (short)this.bonusRng;
+            player.TPlayer.bonusMag = (short)this.bonusMag;
+            player.TPlayer.bonusDef = (short)this.bonusDef;
+            try
+            {
+                if (this.baseHP != null)
+                    player.TPlayer.baseHP = (short)this.baseHP.Value;
+                if (this.baseStr != null)
+                    player.TPlayer.baseStr = (short)this.baseStr.Value;
+                if (this.baseRng != null)
+                    player.TPlayer.baseRng = (short)this.baseRng.Value;
+                if (this.baseMag != null)
+                    player.TPlayer.baseMag = (short)this.baseMag.Value;
+                if (this.baseDef != null)
+                    player.TPlayer.baseDef = (short)this.baseDef.Value;
+                if (this.Regenerate != null)
+                    player.TPlayer.Regenerate = System.Convert.ToBoolean(this.Regenerate.Value);
+                if (this.MRegenerate != null)
+                    player.TPlayer.MRegenerate = System.Convert.ToBoolean(this.MRegenerate.Value);
+                if (this.Spec != null)
+                    player.TPlayer.Spec = (byte)this.Spec.Value;
+                if (this.EXPRate != null)
+                    player.TPlayer.EXPRate = (byte)this.EXPRate.Value;
+                player.TPlayer.Ability = new System.Collections.Generic.List<int>(this.Ability);
+                player.TPlayer.LearnedAbilities = new System.Collections.Generic.List<int>(this.LearnedAbilities);
+            }
+            catch (System.Exception ex)
+            {
+                TShock.Log.Error(ex.ToString());
+            }
+
             player.TPlayer.statLife = this.health;
             player.TPlayer.statLifeMax = this.maxHealth;
             player.TPlayer.statMana = this.maxMana;
@@ -181,6 +256,8 @@ namespace TShockAPI
             player.sY = this.spawnY;
             player.TPlayer.hairDye = this.hairDye;
             player.TPlayer.anglerQuestsFinished = this.questsCompleted;
+
+            player.TPlayer.PlayerLevelCalculate();
 
             if (extraSlot != null)
                 player.TPlayer.extraAccessory = extraSlot.Value == 1 ? true : false;

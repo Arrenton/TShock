@@ -37,13 +37,25 @@ namespace TShockAPI.ServerSideCharacters
 		[Description("Time, in milliseconds, to disallow discarding items after logging in when ServerSideInventory is ON.")]
 		public int LogonDiscardThreshold = 250;
 
-		[Description("The starting default health for new SSC.")] 
+        [Description("The version of which for stat resets for new SSC.")]
+        public int StatusVersion = 1;
+
+        [Description("The starting default level for new SSC.")]
+        public int StartingLevel = 1;
+
+        [Description("The starting default health for new SSC.")] 
 		public int StartingHealth = 100;
 
 		[Description("The starting default mana for new SSC.")] 
 		public int StartingMana = 0;
 
-		[Description("The starting default inventory for new SSC.")] 
+        [Description("Enable Life Regen in SSC?")]
+        public bool EnableRegeneration = true;
+
+        [Description("Enable Mana Regen in SSC?")]
+        public bool EnableManaRegen = true;
+
+        [Description("The starting default inventory for new SSC.")] 
 		public List<NetItem> StartingInventory = new List<NetItem>();
 
 		public static ServerSideConfig Read(string path)

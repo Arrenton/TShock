@@ -1249,7 +1249,7 @@ namespace TShockAPI
 					{ PacketTypes.DoorUse, HandleDoorUse },
 					{ PacketTypes.CompleteAnglerQuest, HandleCompleteAnglerQuest },
 					{ PacketTypes.NumberOfAnglerQuestsCompleted, HandleNumberOfAnglerQuestsCompleted }
-				};
+                };
 		}
 
 		public static bool HandlerGetData(PacketTypes type, TSPlayer player, MemoryStream data)
@@ -1395,7 +1395,33 @@ namespace TShockAPI
 			Color shoeColor = new Color(args.Data.ReadInt8(), args.Data.ReadInt8(), args.Data.ReadInt8());
 
 			BitsByte extra = args.Data.ReadInt8();
-			byte difficulty = 0;
+            var Level = args.Data.ReadInt8();
+            var Exp = args.Data.ReadInt32();
+            var StatPoints = args.Data.ReadInt8();
+            var baseHP = args.Data.ReadInt8();
+            var baseStr = args.Data.ReadInt8();
+            var baseRng = args.Data.ReadInt8();
+            var baseMag = args.Data.ReadInt8();
+            var baseDef = args.Data.ReadInt8();
+            var bonusStr = args.Data.ReadInt8();
+            var bonusRng = args.Data.ReadInt8();
+            var bonusMag = args.Data.ReadInt8();
+            var bonusDef = args.Data.ReadInt8();
+            BitsByte Regenerate = args.Data.ReadInt8();
+            var Spec = args.Data.ReadInt8();
+            var EXPRate = args.Data.ReadInt8();
+            var Ability = new List<int>();
+            var LearnedAbilities = new List<int>();
+            for (int i = 0; i < 54; i++)
+            {
+                byte AB = args.Data.ReadInt8();
+                byte LAB = args.Data.ReadInt8();
+                if (AB > 0)
+                    Ability.Add(AB);
+                if (LAB > 0)
+                    LearnedAbilities.Add(LAB);
+            }
+            byte difficulty = 0;
 			if (extra[0])
 			{
 				difficulty++;
@@ -1432,7 +1458,27 @@ namespace TShockAPI
 				args.Player.TPlayer.underShirtColor = underShirtColor;
 				args.Player.TPlayer.shoeColor = shoeColor;
 				args.Player.TPlayer.hideVisual = new bool[10];
-				for (int i = 0; i < 8; i++)
+                args.Player.TPlayer.Level = Level;
+                args.Player.TPlayer.Exp = Exp;
+                args.Player.TPlayer.StatPoints = StatPoints;
+                args.Player.TPlayer.baseHP = baseHP;
+                args.Player.TPlayer.baseStr = baseStr;
+                args.Player.TPlayer.baseRng = baseRng;
+                args.Player.TPlayer.baseMag = baseMag;
+                args.Player.TPlayer.baseDef = baseDef;
+                args.Player.TPlayer.bonusStr = bonusStr;
+                args.Player.TPlayer.bonusRng = bonusRng;
+                args.Player.TPlayer.bonusMag = bonusMag;
+                args.Player.TPlayer.bonusDef = bonusDef;
+                args.Player.TPlayer.Regenerate = Regenerate[0];
+                args.Player.TPlayer.MRegenerate = Regenerate[1];
+                args.Player.TPlayer.Spec = Spec;
+                args.Player.TPlayer.EXPRate = EXPRate;
+                args.Player.TPlayer.Ability.Clear();
+                args.Player.TPlayer.LearnedAbilities.Clear();
+                args.Player.TPlayer.Ability = Ability;
+                args.Player.TPlayer.LearnedAbilities = LearnedAbilities;
+                for (int i = 0; i < 8; i++)
 					args.Player.TPlayer.hideVisual[i] = hideVisual[i];
 				for (int i = 8; i < 10; i++)
 					args.Player.TPlayer.hideVisual[i] = hideVisual2[i];
